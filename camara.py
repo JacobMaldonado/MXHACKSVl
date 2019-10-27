@@ -10,6 +10,7 @@ from pygame import mixer
 
 # Computer Vision Keys
 subscription_key = "dc46f2c494e74b67b8c82ec83d443b7d"
+subscription_key_tts = "6a36997c65954d35a7b4155508543d04"
 endpoint = "https://prueba-bravitos.cognitiveservices.azure.com/"
 # path to Object detection service
 analyze_url = endpoint + "vision/v2.1/analyze"
@@ -30,7 +31,7 @@ mixer.music.load("beep.mp3")
 
 def main():
     # Start video capture
-    capture = cv2.VideoCapture(2)
+    capture = cv2.VideoCapture(0)
     # Stores the time for make an interval on the reading of image
     last_time = 0
     # Get token
@@ -40,16 +41,18 @@ def main():
         val, frame = capture.read()
         # Encoding image to jpg format
         img_str = cv2.imencode('.jpg', frame)[1].tostring()
-        cv2.imshow('Imagen', frame)
+        # cv2.imshow('Imagen', frame)
 
         # Obtain the actual time
         millis = int(round(time() * 1000))
-        if (last_time + 2000) < millis:
+        measureDistance()
+        if (last_time + 5000) < millis:
             # result = detectObjectsFromImage(img_str)
             threading.Thread(target=detectTextFromImage,
                              args=(img_str,)).start()
             threading.Thread(target=detectObjectsFromImage,
                              args=(img_str,)).start()
+            measureDistance()
             # Obtain new time for last_time
             last_time = int(round(time() * 1000))
         # Salir con 'ESC'
@@ -63,7 +66,7 @@ def detectObjectsFromImage(image):
     # Features obteined from image
     params = {'visualFeatures': 'Objects'}
     res = requestToAzureComputerVision(analyze_url, params, image).json()
-    # print(res)
+    print(res)
     if res['objects'][0]:
         text = res['objects'][0]['object']
         speechReader(text)
@@ -137,9 +140,10 @@ def validateDistance(distancia):
 
 
 def get_token():
+        global access_token
         fetch_token_url = "https://southcentralus.api.cognitive.microsoft.com/sts/v1.0/issueToken"
         headers = {
-            'Ocp-Apim-Subscription-Key': subscription_key
+            'Ocp-Apim-Subscription-Key': subscription_key_tts
         }
         response = requests.post(fetch_token_url, headers=headers)
         access_token = str(response.text)

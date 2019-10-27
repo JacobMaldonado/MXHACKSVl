@@ -17,10 +17,10 @@ print "Medición de distancias en progreso"
 mixer.init()
 mixer.music.load("beep.mp3")
 
-		
+
 try:
     while True:
-	time.sleep(0.5)
+	    time.sleep(0.5)
         GPIO.output(TRIG, GPIO.LOW)
         print "Esperando a que el sensor se estabilice"
         time.sleep(0.01)
@@ -40,22 +40,22 @@ try:
         distancia = (34300 * duracion) / 2
         print "Distancia: %.2f cm" % distancia
 
-#Para los rangos y repruduccion de sonidos
+# Para los rangos y repruduccion de sonidos
 
-	if distancia <= 150 and distancia >= 100:
-		print "Objeto Detectado"
-		print "Distancia: %.2f cm" % distancia
-		
-		mixer.music.play()		
-	elif distancia <= 99 and distancia >= 50:
-		for i in range(2):
-			mixer.music.play()
-			time.sleep(0.1)	 
-            mixer.music.stop()
-	elif distancia < 50:
-		for i in range(3):
-			mixer.music.play()
-			time.sleep(0.1)	 
-            mixer.music.stop()
+        if distancia <= 150 and distancia >= 100:
+            print "Objeto Detectado"
+            print "Distancia: %.2f cm" % distancia
+            
+            mixer.music.play()		
+        elif distancia <= 99 and distancia >= 50:
+            for i in range(2):
+                mixer.music.play()
+                time.sleep(0.1)	 
+                mixer.music.stop()
+        elif distancia < 50:
+            for i in range(3):
+                mixer.music.play()
+                time.sleep(0.1)	 
+                mixer.music.stop()
 finally:
     GPIO.cleanup()

@@ -48,6 +48,7 @@ class TextToSpeech(object):
         }
         response = requests.post(fetch_token_url, headers=headers)
         self.access_token = str(response.text)
+        print(self.access_token)
 
     def save_audio(self):
         base_url = 'https://southcentralus.tts.speech.microsoft.com/'
